@@ -253,7 +253,7 @@ public class Main_Window extends javax.swing.JFrame {
                         .addComponent(prevBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(lastBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(55, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -285,7 +285,7 @@ public class Main_Window extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(chooseImgBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 469, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(insertBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -380,22 +380,53 @@ public class Main_Window extends javax.swing.JFrame {
 
             // update without image
             if (imgPath == null) {
-                updateQuery = "UPDATE PRODUCTS SET name = ?, price = ?," + ", add_date = ? where id= ?";        
+                updateQuery = "UPDATE products SET name = ?, price = ?" + ", add_date = ? where id= ?";
                 try {
                     ps = con.prepareStatement(updateQuery);
-                    
+
                     ps.setString(1, txt_name.getText());
                     ps.setString(2, txt_price.getText());
-                    
+
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                     String addDate = dateFormat.format(DateChooser.getDate());
-                    
+
                     ps.setString(3, addDate);
                     ps.setInt(4, Integer.parseInt(txt_id.getText()));
+                    
+                    ps.executeUpdate();
+                    JOptionPane.showMessageDialog(null, "Update Successfully!!");
                 } catch (SQLException ex) {
                     Logger.getLogger(Main_Window.class.getName()).log(Level.SEVERE, null, ex);
                 }
+            } else {
+                try {
+                    // Update with image
+                    InputStream img = new FileInputStream(new File(imgPath));
+
+                    updateQuery = "UPDATE products SET name = ?, price = ?" + ", add_date = ?, image = ? where id= ?";
+
+                    ps = con.prepareStatement(updateQuery);
+
+                    ps.setString(1, txt_name.getText());
+                    ps.setString(2, txt_price.getText());
+
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    String addDate = dateFormat.format(DateChooser.getDate());
+
+                    ps.setString(3, addDate);
+                    ps.setBlob(4, img);
+                    ps.setInt(5, Integer.parseInt(txt_id.getText()));
+                    
+                    ps.executeUpdate();
+                    
+                    JOptionPane.showMessageDialog(null, "Update Successfully!!");
+
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, ex.getMessage());
+                }
             }
+        } else {
+            JOptionPane.showMessageDialog(null, "One or more fields are empty!!");
         }
     }//GEN-LAST:event_updateBtnActionPerformed
 
