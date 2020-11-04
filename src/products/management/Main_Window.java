@@ -187,6 +187,11 @@ public class Main_Window extends javax.swing.JFrame {
 
         jButton3.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         jButton3.setText("Delete");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         firstBtn.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         firstBtn.setText("First");
@@ -392,7 +397,7 @@ public class Main_Window extends javax.swing.JFrame {
 
                     ps.setString(3, addDate);
                     ps.setInt(4, Integer.parseInt(txt_id.getText()));
-                    
+
                     ps.executeUpdate();
                     JOptionPane.showMessageDialog(null, "Update Successfully!!");
                 } catch (SQLException ex) {
@@ -416,9 +421,9 @@ public class Main_Window extends javax.swing.JFrame {
                     ps.setString(3, addDate);
                     ps.setBlob(4, img);
                     ps.setInt(5, Integer.parseInt(txt_id.getText()));
-                    
+
                     ps.executeUpdate();
-                    
+
                     JOptionPane.showMessageDialog(null, "Update Successfully!!");
 
                 } catch (Exception ex) {
@@ -429,6 +434,25 @@ public class Main_Window extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "One or more fields are empty!!");
         }
     }//GEN-LAST:event_updateBtnActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        if (!txt_id.getText().equals("")) {
+            try {
+                Connection con = getConnection();
+                PreparedStatement ps = con.prepareStatement("DELETE FROM products where id = ?");
+                int id = Integer.parseInt(txt_id.getText());
+                ps.setInt(1, id);
+                ps.executeUpdate();
+                JOptionPane.showMessageDialog(null, "Product Deleted");
+            } catch (SQLException ex) {
+                Logger.getLogger(Main_Window.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(null, "Product Not Deleted");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Product Not Deleted: Enter ID to Delete");
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
